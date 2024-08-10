@@ -1,0 +1,27 @@
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# Define the URL of the website you want to scrape
+url = 'https://example.com'
+
+# Send an HTTP request to the website
+response = requests.get(url)
+
+# Parse the content of the request with BeautifulSoup
+soup = BeautifulSoup(response.content, 'html.parser')
+
+# Find the data you want to scrape (for example, extracting all the titles and links from a list of articles)
+data = []
+for item in soup.find_all('div', class_='article'):
+    title = item.find('h2').text.strip()
+    link = item.find('a')['href']
+    data.append({'Title': title, 'Link': link})
+
+# Convert the data into a pandas DataFrame
+df = pd.DataFrame(data)
+
+# Save the data to a CSV file
+df.to_csv('scraped_data.csv', index=False)
+
+print("Data has been successfully scraped and saved to 'scraped_data.csv'")
